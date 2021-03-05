@@ -3,7 +3,7 @@
 using namespace std;
 
 int main(){
-    FileStream a ("teste.txt");
+    FileStream a ("test.txt");
     cout<<a.nextFloat() + a.nextInt()*a.nextInt();
     return 0;
 }

@@ -115,6 +115,8 @@ class FileStream{
         }
         std::istringstream iss (line);
         std::vector<std::string> results(std::istream_iterator<std::string>{iss},  std::istream_iterator<std::string>());
+        lineCount +=results.size();
+        loadLine();
         return results;
     }
 };

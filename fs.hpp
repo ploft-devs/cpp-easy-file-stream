@@ -119,4 +119,28 @@ class FileStream{
         loadLine();
         return results;
     }
+
+	/**
+	 * @brief Get the string until the delimiter
+	 * 
+	 * @param delim Delimiter character to stop reading, default is ','
+	 * @return std::string 
+	 */
+	std::string getDelimiter(char delim=','){
+		if(line.length()<1){
+			if(file.eof())
+				return "";
+			loadLine();
+		}
+		std::string result = "";
+		while(line.length()>0){
+			if(line[0]==delim){
+				line = line.substr(1);
+				return result;
+			}
+			result+=line[0];
+			line = line.substr(1);
+		}
+		return result;
+	}
 };

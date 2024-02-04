@@ -1,11 +1,14 @@
-# CMakeLists.txt
+# CMakeLists.txt in cpp-easy-file-stream
 
 cmake_minimum_required(VERSION 3.12)
-project(libEasyFileStream VERSION 1.0.0 LANGUAGES CXX)
+project(easyFileStream VERSION 1.0.0 LANGUAGES CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Option to enable/disable the test executable
+option(BUILD_TEST_EXECUTABLE "Build the test executable" OFF)
 
 # Add header files to the library target
 add_library(libEasyFileStream INTERFACE)
@@ -17,17 +20,26 @@ target_include_directories(libEasyFileStream INTERFACE
 # Set compiler optimization flags
 target_compile_options(libEasyFileStream INTERFACE -O2)
 
-# Add executable for testing
-add_executable(testExecutable test/test.cpp)
-target_link_libraries(testExecutable PRIVATE libEasyFileStream)
+# Conditionally add the test executable
+if(BUILD_TEST_EXECUTABLE)
+    add_executable(testExecutable test/test.cpp)
+    target_link_libraries(testExecutable PRIVATE libEasyFileStream)
+    
+    # Copy test.txt to the binary directory during build
+    configure_file(test/test.txt ${CMAKE_CURRENT_BINARY_DIR}/bin/test.txt COPYONLY)
 
-# Copy test.txt to the binary directory during build
-configure_file(test/test.txt ${CMAKE_CURRENT_BINARY_DIR}/bin/test.txt COPYONLY)
-
-# Set the output directory for the test executable
-set_target_properties(testExecutable PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
-)
+    # Set the output directory for the test executable
+    set_target_properties(testExecutable PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
+    )
+    
+    # Add a custom target to run the test
+    add_custom_target(run_test
+        COMMAND ./bin/testExecutable
+        DEPENDS testExecutable
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+endif()
 
 # You can add additional compiler options or flags here if needed
 

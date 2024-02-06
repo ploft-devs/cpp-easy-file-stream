@@ -20,28 +20,8 @@ target_include_directories(libEasyFileStream INTERFACE
 # Set compiler optimization flags
 target_compile_options(libEasyFileStream INTERFACE -O2)
 
-# Conditionally add the test executable
-if(BUILD_TEST_EXECUTABLE)
-    add_executable(testExecutable test/test.cpp)
-    target_link_libraries(testExecutable PRIVATE libEasyFileStream)
-    
-    # Copy test.txt to the binary directory during build
-    configure_file(test/test.txt ${CMAKE_CURRENT_BINARY_DIR}/bin/test.txt COPYONLY)
-
-    # Set the output directory for the test executable
-    set_target_properties(testExecutable PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
-    )
-    
-    # Add a custom target to run the test
-    add_custom_target(run_test
-        COMMAND ./bin/testExecutable
-        DEPENDS testExecutable
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    )
-endif()
-
-# You can add additional compiler options or flags here if needed
+enable_testing()
+add_subdirectory(test)
 
 # Optional: Install the library
 install(TARGETS libEasyFileStream
